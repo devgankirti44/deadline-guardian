@@ -8,8 +8,9 @@
 
 ## 🌟 Live Demo
 
-🚀 **Live URL:** *Coming soon — deploying via Firebase App Hosting (Google Cloud)*
+🚀 **Live URL:** https://last-minute-saviour.web.app
 
+✅ **Status:** Live on Google Cloud (Firebase Hosting)
 ---
 
 ## 🎯 Problem Statement

@@ -19,21 +19,6 @@ export default function CalendarPage() {
     return () => unsub();
   }, []);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const calendar = params.get("calendar");
-      if (calendar === "connected") {
-        toast.success("🎉 Google Calendar connected!");
-        window.history.replaceState({}, "", "/calendar");
-      } else if (calendar === "denied") {
-        toast.error("Calendar permission denied");
-      } else if (calendar === "error") {
-        toast.error("Connection failed. Try again.");
-      }
-    }
-  }, []);
-
   const { tasks } = useTasks(user?.uid);
   const { isConnected, events, loading, fetchEvents, createEventFromTask } = useGoogleCalendar(user?.uid);
 

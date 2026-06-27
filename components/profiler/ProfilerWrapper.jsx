@@ -13,11 +13,30 @@ export default function ProfilerWrapper() {
     const unsub = onAuthChange((u) => {
       if (u) {
         setUser(u);
+        
+        // ✅ Check BOTH completion AND skip status
         const completed = localStorage.getItem("profile_completed");
-        if (!completed) {
-          // Show welcome screen after slight delay
-          setTimeout(() => setShowWelcome(true), 1500);
+        const skipped = localStorage.getItem("profile_skipped");
+        const skipTimestamp = localStorage.getItem("profile_skipped_at");
+        
+        // ✅ If completed → never show
+        if (completed) {
+          console.log("✅ Profile completed - won't show");
+          return;
         }
+        
+        // ✅ If skipped recently (within 24 hours) → don't show
+        if (skipped && skipTimestamp) {
+          const hoursSinceSkip = (Date.now() - parseInt(skipTimestamp)) / (1000 * 60 * 60);
+          if (hoursSinceSkip < 24) {
+            console.log(`⏳ Profile skipped ${Math.round(hoursSinceSkip)}h ago - won't show again for 24h`);
+            return;
+          }
+        }
+        
+        // Otherwise, show welcome screen after slight delay
+        console.log("📋 Showing profile welcome screen");
+        setTimeout(() => setShowWelcome(true), 1500);
       }
     });
     return () => unsub();
@@ -40,11 +59,21 @@ export default function ProfilerWrapper() {
 
   const handleSkip = () => {
     setShowWelcome(false);
+    // ✅ Save skip with timestamp
     localStorage.setItem("profile_skipped", "true");
+    localStorage.setItem("profile_skipped_at", Date.now().toString());
+    console.log("⏭️ Profile skipped - won't show for 24 hours");
   };
 
   const handleComplete = (profile) => {
     setShowProfiler(false);
+    // ✅ Mark as completed (don't show again ever)
+    localStorage.setItem("profile_completed", "true");
+    localStorage.setItem("profile_completed_at", Date.now().toString());
+    if (profile) {
+      localStorage.setItem("user_profile", JSON.stringify(profile));
+    }
+    console.log("✅ Profile completed and saved");
   };
 
   // ─── WELCOME SCREEN ──────────────────────────

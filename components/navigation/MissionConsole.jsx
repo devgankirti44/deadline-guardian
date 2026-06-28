@@ -4,7 +4,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import {
   Radio, Layers, Crosshair, Brain, AlertOctagon,
-  Archive, Shield, LogOut, HelpCircle, User, Calendar,
+  Archive, Shield, LogOut, HelpCircle, User, Calendar, X,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -12,19 +12,18 @@ const MODULES = [
   { id: "mission-control", path: "/mission-control", label: "Mission Control", icon: Radio },
   { id: "operations", path: "/operations", label: "Operations", icon: Layers },
   { id: "focus-room", path: "/focus-room", label: "Focus Room", icon: Crosshair },
-  { id: "calendar", path: "/calendar", label: "Calendar", icon: Calendar }, // 📅 NEW
+  { id: "calendar", path: "/calendar", label: "Calendar", icon: Calendar },
   { id: "intelligence", path: "/intelligence", label: "Intelligence", icon: Brain },
   { id: "crisis", path: "/crisis", label: "Crisis Center", icon: AlertOctagon },
   { id: "archive", path: "/archive", label: "Archive", icon: Archive },
 ];
 
-export const MissionConsole = ({ alerts = {} }) => {
+export const MissionConsole = ({ alerts = {}, mobileOpen = false, onMobileClose = () => {} }) => {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
   const [profile, setProfile] = useState(null);
 
-  // Load user profile from localStorage
   useEffect(() => {
     const stored = localStorage.getItem("user_profile");
     if (stored) {
@@ -36,7 +35,6 @@ export const MissionConsole = ({ alerts = {} }) => {
     }
   }, []);
 
-  // Listen for profile updates
   useEffect(() => {
     const handleStorageChange = () => {
       const stored = localStorage.getItem("user_profile");
@@ -68,153 +66,167 @@ export const MissionConsole = ({ alerts = {} }) => {
     const event = new CustomEvent("take-personality-test");
     window.dispatchEvent(event);
     toast.success("Loading personality assessment...");
+    onMobileClose();
+  };
+
+  const handleNavClick = (path) => {
+    router.push(path);
+    onMobileClose();
   };
 
   return (
-    <aside
-      className="flex flex-col h-screen"
-      style={{
-        width: "220px",
-        background: "linear-gradient(180deg, #0A0A0A 0%, #060606 100%)",
-        flexShrink: 0,
-        position: "relative",
-      }}
-    >
-      {/* Subtle right glow border */}
-      <div
+    <>
+      <aside
+        className={`mission-console flex flex-col h-screen ${mobileOpen ? 'mobile-open' : ''}`}
         style={{
-          position: "absolute",
-          right: 0,
-          top: 0,
-          bottom: 0,
-          width: "1px",
-          background: "linear-gradient(180deg, transparent 0%, rgba(245,158,11,0.15) 50%, transparent 100%)",
+          width: "220px",
+          background: "linear-gradient(180deg, #0A0A0A 0%, #060606 100%)",
+          flexShrink: 0,
+          position: "relative",
+          zIndex: 999,
         }}
-      />
+      >
+        {/* Mobile close button */}
+        <button
+          onClick={onMobileClose}
+          className="mobile-close-btn"
+          style={{
+            display: 'none',
+            position: 'absolute',
+            top: '12px',
+            right: '12px',
+            background: 'rgba(255,255,255,0.05)',
+            border: '1px solid rgba(255,255,255,0.1)',
+            borderRadius: '8px',
+            width: '36px',
+            height: '36px',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            color: '#A3A3A3',
+            zIndex: 10,
+          }}
+        >
+          <X size={18} />
+        </button>
 
-      {/* LOGO */}
-      <div className="px-6 pt-8 pb-8">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex items-center justify-center w-10 h-10 relative"
-            style={{
-              background: "rgba(245,158,11,0.08)",
-              borderRadius: "8px",
-            }}
-          >
+        <div
+          style={{
+            position: "absolute",
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: "1px",
+            background: "linear-gradient(180deg, transparent 0%, rgba(245,158,11,0.15) 50%, transparent 100%)",
+          }}
+        />
+
+        {/* LOGO */}
+        <div className="px-6 pt-8 pb-8">
+          <div className="flex items-center gap-3">
             <div
-              className="absolute inset-0"
+              className="flex items-center justify-center w-10 h-10 relative"
               style={{
+                background: "rgba(245,158,11,0.08)",
                 borderRadius: "8px",
-                boxShadow: "0 0 20px rgba(245,158,11,0.3), inset 0 0 20px rgba(245,158,11,0.1)",
-              }}
-            />
-            <Shield size={18} color="#F59E0B" style={{ position: "relative", zIndex: 1 }} />
-          </div>
-          <div>
-            <div
-              style={{
-                color: "#F59E0B",
-                fontSize: "11px",
-                fontFamily: "JetBrains Mono, monospace",
-                letterSpacing: "0.2em",
-                fontWeight: "600",
-                lineHeight: "1.3",
               }}
             >
-              DEADLINE
+              <div
+                className="absolute inset-0"
+                style={{
+                  borderRadius: "8px",
+                  boxShadow: "0 0 20px rgba(245,158,11,0.3), inset 0 0 20px rgba(245,158,11,0.1)",
+                }}
+              />
+              <Shield size={18} color="#F59E0B" style={{ position: "relative", zIndex: 1 }} />
             </div>
-            <div
-              style={{
+            <div>
+              <div style={{
                 color: "#F59E0B",
                 fontSize: "11px",
                 fontFamily: "JetBrains Mono, monospace",
                 letterSpacing: "0.2em",
                 fontWeight: "600",
                 lineHeight: "1.3",
-              }}
-            >
-              GUARDIAN
+              }}>
+                DEADLINE
+              </div>
+              <div style={{
+                color: "#F59E0B",
+                fontSize: "11px",
+                fontFamily: "JetBrains Mono, monospace",
+                letterSpacing: "0.2em",
+                fontWeight: "600",
+                lineHeight: "1.3",
+              }}>
+                GUARDIAN
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* PROFILE BADGE (if completed) */}
-      {profile && (
-        <div className="px-4 pb-4">
-          <div
-            className="flex items-center gap-2 px-3 py-2"
-            style={{
-              background: `linear-gradient(135deg, ${profile.profileColor}15 0%, transparent 100%)`,
-              border: `1px solid ${profile.profileColor}40`,
-              borderRadius: "10px",
-            }}
-          >
+        {profile && (
+          <div className="px-4 pb-4">
             <div
-              className="w-2 h-2 rounded-full flex-shrink-0"
+              className="flex items-center gap-2 px-3 py-2"
               style={{
-                background: profile.profileColor,
-                boxShadow: `0 0 8px ${profile.profileColor}`,
+                background: `linear-gradient(135deg, ${profile.profileColor}15 0%, transparent 100%)`,
+                border: `1px solid ${profile.profileColor}40`,
+                borderRadius: "10px",
               }}
-            />
-            <div className="flex-1 min-w-0">
+            >
               <div
+                className="w-2 h-2 rounded-full flex-shrink-0"
                 style={{
+                  background: profile.profileColor,
+                  boxShadow: `0 0 8px ${profile.profileColor}`,
+                }}
+              />
+              <div className="flex-1 min-w-0">
+                <div style={{
                   color: profile.profileColor,
                   fontSize: "9px",
                   fontWeight: "700",
                   letterSpacing: "0.15em",
                   fontFamily: "JetBrains Mono, monospace",
-                }}
-              >
-                AI CALIBRATED
-              </div>
-              <div
-                style={{
+                }}>
+                  AI CALIBRATED
+                </div>
+                <div style={{
                   color: "#FAFAFA",
                   fontSize: "11px",
                   fontWeight: "500",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                }}
-              >
-                {profile.profileType}
+                }}>
+                  {profile.profileType}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* NAVIGATION */}
-      <nav className="flex-1 px-4 overflow-y-auto">
-        {MODULES.map((mod) => {
-          const isActive = pathname === mod.path;
-          const alertCount = alerts[mod.id] || 0;
+        <nav className="flex-1 px-4 overflow-y-auto">
+          {MODULES.map((mod) => {
+            const isActive = pathname === mod.path;
+            const alertCount = alerts[mod.id] || 0;
 
-          return (
-            <button
-              key={mod.id}
-              onClick={() => router.push(mod.path)}
-              className="w-full mb-1 flex items-center gap-3 transition-all relative group"
-              style={{
-                padding: "12px 16px",
-                background: isActive ? "rgba(245,158,11,0.08)" : "transparent",
-                borderRadius: "10px",
-                border: "none",
-                cursor: "pointer",
-              }}
-              onMouseEnter={(e) => {
-                if (!isActive) e.currentTarget.style.background = "rgba(255,255,255,0.03)";
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) e.currentTarget.style.background = "transparent";
-              }}
-            >
-              {isActive && (
-                <div
-                  style={{
+            return (
+              <button
+                key={mod.id}
+                onClick={() => handleNavClick(mod.path)}
+                className="w-full mb-1 flex items-center gap-3 transition-all relative group"
+                style={{
+                  padding: "12px 16px",
+                  background: isActive ? "rgba(245,158,11,0.08)" : "transparent",
+                  borderRadius: "10px",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                {isActive && (
+                  <div style={{
                     position: "absolute",
                     left: "-16px",
                     top: "50%",
@@ -226,44 +238,35 @@ export const MissionConsole = ({ alerts = {} }) => {
                     boxShadow: mod.id === "calendar" 
                       ? "0 0 12px rgba(66,133,244,0.6)" 
                       : "0 0 12px rgba(245,158,11,0.6)",
+                  }} />
+                )}
+
+                <div
+                  className="flex items-center justify-center flex-shrink-0"
+                  style={{
+                    width: "20px",
+                    height: "20px",
+                    color: isActive 
+                      ? (mod.id === "calendar" ? "#4285F4" : "#F59E0B") 
+                      : "#6B7280",
                   }}
-                />
-              )}
+                >
+                  <mod.icon size={16} />
+                </div>
 
-              <div
-                className="flex items-center justify-center flex-shrink-0"
-                style={{
-                  width: "20px",
-                  height: "20px",
-                  color: isActive 
-                    ? (mod.id === "calendar" ? "#4285F4" : "#F59E0B") 
-                    : "#6B7280",
-                  filter: isActive 
-                    ? (mod.id === "calendar" 
-                      ? "drop-shadow(0 0 6px rgba(66,133,244,0.5))" 
-                      : "drop-shadow(0 0 6px rgba(245,158,11,0.5))") 
-                    : "none",
-                }}
-              >
-                <mod.icon size={16} />
-              </div>
-
-              <span
-                style={{
+                <span style={{
                   color: isActive ? "#FAFAFA" : "#6B7280",
                   fontSize: "13px",
                   fontFamily: "Inter, sans-serif",
                   fontWeight: isActive ? "500" : "400",
                   flex: 1,
                   textAlign: "left",
-                }}
-              >
-                {mod.label}
-              </span>
+                }}>
+                  {mod.label}
+                </span>
 
-              {alertCount > 0 && (
-                <span
-                  style={{
+                {alertCount > 0 && (
+                  <span style={{
                     background: mod.id === "crisis" 
                       ? "#EF4444" 
                       : mod.id === "calendar" 
@@ -281,128 +284,120 @@ export const MissionConsole = ({ alerts = {} }) => {
                     borderRadius: "6px",
                     minWidth: "18px",
                     textAlign: "center",
-                  }}
-                >
-                  {alertCount}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </nav>
+                  }}>
+                    {alertCount}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
 
-      {/* ACTION BUTTONS */}
-      <div className="px-4 pb-3 space-y-2">
-        {/* PERSONALITY TEST */}
-        <button
-          onClick={handlePersonalityTest}
-          className="w-full flex items-center gap-2 transition-all"
-          style={{
-            padding: "10px 14px",
-            background: profile ? "transparent" : "linear-gradient(135deg, rgba(168,85,247,0.1), transparent)",
-            border: `1px solid ${profile ? "rgba(168,85,247,0.15)" : "rgba(168,85,247,0.3)"}`,
-            borderRadius: "8px",
-            color: profile ? "#6B7280" : "#A855F7",
-            fontSize: "11px",
-            cursor: "pointer",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(168,85,247,0.08)";
-            e.currentTarget.style.color = "#A855F7";
-            e.currentTarget.style.borderColor = "rgba(168,85,247,0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = profile ? "transparent" : "linear-gradient(135deg, rgba(168,85,247,0.1), transparent)";
-            e.currentTarget.style.color = profile ? "#6B7280" : "#A855F7";
-            e.currentTarget.style.borderColor = profile ? "rgba(168,85,247,0.15)" : "rgba(168,85,247,0.3)";
-          }}
-        >
-          <Brain size={13} />
-          <span style={{ fontFamily: "JetBrains Mono, monospace", letterSpacing: "0.05em" }}>
-            {profile ? "Retake Test" : "Take Big Five Test"}
-          </span>
-        </button>
-
-        {/* TOUR BUTTON */}
-        <button
-          onClick={handleTour}
-          className="w-full flex items-center gap-2 transition-all"
-          style={{
-            padding: "10px 14px",
-            background: "transparent",
-            border: "1px solid rgba(245,158,11,0.15)",
-            borderRadius: "8px",
-            color: "#6B7280",
-            fontSize: "11px",
-            cursor: "pointer",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "rgba(245,158,11,0.08)";
-            e.currentTarget.style.color = "#F59E0B";
-            e.currentTarget.style.borderColor = "rgba(245,158,11,0.4)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "transparent";
-            e.currentTarget.style.color = "#6B7280";
-            e.currentTarget.style.borderColor = "rgba(245,158,11,0.15)";
-          }}
-        >
-          <HelpCircle size={13} />
-          <span style={{ fontFamily: "JetBrains Mono, monospace", letterSpacing: "0.05em" }}>
-            Take Tour
-          </span>
-        </button>
-      </div>
-
-      {/* AI ONLINE STATUS */}
-      <div className="px-6 pb-6">
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div
-              className="w-2.5 h-2.5 rounded-full"
-              style={{
-                background: "#10B981",
-                boxShadow: "0 0 12px #10B981, 0 0 24px rgba(16,185,129,0.4)",
-              }}
-            />
-            <div
-              className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping"
-              style={{ background: "#10B981", opacity: 0.4 }}
-            />
-          </div>
-          <span
+        <div className="px-4 pb-3 space-y-2">
+          <button
+            onClick={handlePersonalityTest}
+            className="w-full flex items-center gap-2 transition-all"
             style={{
+              padding: "10px 14px",
+              background: profile ? "transparent" : "linear-gradient(135deg, rgba(168,85,247,0.1), transparent)",
+              border: `1px solid ${profile ? "rgba(168,85,247,0.15)" : "rgba(168,85,247,0.3)"}`,
+              borderRadius: "8px",
+              color: profile ? "#6B7280" : "#A855F7",
+              fontSize: "11px",
+              cursor: "pointer",
+            }}
+          >
+            <Brain size={13} />
+            <span style={{ fontFamily: "JetBrains Mono, monospace", letterSpacing: "0.05em" }}>
+              {profile ? "Retake Test" : "Take Big Five Test"}
+            </span>
+          </button>
+
+          <button
+            onClick={handleTour}
+            className="w-full flex items-center gap-2 transition-all"
+            style={{
+              padding: "10px 14px",
+              background: "transparent",
+              border: "1px solid rgba(245,158,11,0.15)",
+              borderRadius: "8px",
+              color: "#6B7280",
+              fontSize: "11px",
+              cursor: "pointer",
+            }}
+          >
+            <HelpCircle size={13} />
+            <span style={{ fontFamily: "JetBrains Mono, monospace", letterSpacing: "0.05em" }}>
+              Take Tour
+            </span>
+          </button>
+        </div>
+
+        <div className="px-6 pb-6">
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div
+                className="w-2.5 h-2.5 rounded-full"
+                style={{
+                  background: "#10B981",
+                  boxShadow: "0 0 12px #10B981, 0 0 24px rgba(16,185,129,0.4)",
+                }}
+              />
+              <div
+                className="absolute inset-0 w-2.5 h-2.5 rounded-full animate-ping"
+                style={{ background: "#10B981", opacity: 0.4 }}
+              />
+            </div>
+            <span style={{
               color: "#10B981",
               fontSize: "11px",
               fontFamily: "JetBrains Mono, monospace",
               letterSpacing: "0.1em",
               fontWeight: "500",
-            }}
-          >
-            AI Online
-          </span>
-        </div>
+            }}>
+              AI Online
+            </span>
+          </div>
 
-        <button
-          onClick={handleLogout}
-          className="mt-4 w-full flex items-center gap-2 transition-all"
-          style={{
-            padding: "8px 0",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            color: "#4B5563",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#EF4444")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "#4B5563")}
-          title="Logout"
-        >
-          <LogOut size={12} />
-          <span style={{ fontSize: "11px", fontFamily: "JetBrains Mono, monospace" }}>
-            Sign Out
-          </span>
-        </button>
-      </div>
-    </aside>
+          <button
+            onClick={handleLogout}
+            className="mt-4 w-full flex items-center gap-2 transition-all"
+            style={{
+              padding: "8px 0",
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              color: "#4B5563",
+            }}
+            title="Logout"
+          >
+            <LogOut size={12} />
+            <span style={{ fontSize: "11px", fontFamily: "JetBrains Mono, monospace" }}>
+              Sign Out
+            </span>
+          </button>
+        </div>
+      </aside>
+
+      <style jsx>{`
+        @media (max-width: 768px) {
+          .mission-console {
+            position: fixed !important;
+            top: 0 !important;
+            left: -100% !important;
+            width: 80% !important;
+            max-width: 280px !important;
+            transition: left 0.3s ease !important;
+            box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+          }
+          .mission-console.mobile-open {
+            left: 0 !important;
+          }
+          .mobile-close-btn {
+            display: flex !important;
+          }
+        }
+      `}</style>
+    </>
   );
 };

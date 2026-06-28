@@ -13,9 +13,7 @@ export default function RootLayout({ children }) {
         <title>Deadline Guardian // Mission Control</title>
         <meta name="description" content="AI-powered deadline prevention system. Never miss a critical deadline again." />
         
-        {/* ═══════════════════════════════════════════════
-            🎨 FAVICONS — Multiple sizes for all devices
-            ═══════════════════════════════════════════════ */}
+        {/* FAVICONS */}
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -29,8 +27,8 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <meta name="apple-mobile-web-app-title" content="Deadline Guardian" />
         
-        {/* VIEWPORT for mobile */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        {/* ✅ FIXED VIEWPORT — allow zoom for accessibility */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         
         {/* Fonts */}
         <link
@@ -39,7 +37,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        style={{ backgroundColor: "#0A0A0A", minHeight: "100vh" }}
+        style={{ backgroundColor: "#0A0A0A", minHeight: "100vh", overflowX: "hidden" }}
         className={inter.className}
       >
         <AuthProvider>
@@ -55,6 +53,7 @@ export default function RootLayout({ children }) {
               borderRadius: "2px",
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: "12px",
+              maxWidth: "90vw",
             },
             success: {
               iconTheme: {

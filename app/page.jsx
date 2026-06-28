@@ -28,22 +28,22 @@ const BootSequence = ({ onComplete }) => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center z-50"
+      className="fixed inset-0 flex items-center justify-center z-50 p-4"
       style={{ background: "#0D0D0D" }}
     >
-      <div className="w-full max-w-lg px-8">
-        <div className="flex items-center gap-3 mb-8">
+      <div className="w-full max-w-lg">
+        <div className="flex items-center gap-3 mb-6 md:mb-8">
           <div
-            className="w-10 h-10 flex items-center justify-center"
+            className="w-10 h-10 flex items-center justify-center flex-shrink-0"
             style={{ border: "1px solid #F59E0B" }}
           >
             <Shield size={20} color="#F59E0B" />
           </div>
-          <div>
-            <div className="mono-xs font-bold tracking-widest" style={{ color: "#F59E0B" }}>
+          <div className="min-w-0">
+            <div className="mono-xs font-bold tracking-widest truncate" style={{ color: "#F59E0B" }}>
               DEADLINE GUARDIAN AI
             </div>
-            <div className="mono-xs" style={{ color: "#4B5563" }}>
+            <div className="mono-xs truncate" style={{ color: "#4B5563" }}>
               MISSION CONTROL SYSTEM v2.0
             </div>
           </div>
@@ -51,12 +51,12 @@ const BootSequence = ({ onComplete }) => {
 
         <div className="space-y-2">
           {lines.map((line, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <span style={{ color: "#10B981" }} className="mono-xs">
+            <div key={i} className="flex items-start gap-2 md:gap-3">
+              <span style={{ color: "#10B981" }} className="mono-xs flex-shrink-0">
                 ►
               </span>
               <span
-                className="mono-xs"
+                className="mono-xs break-words"
                 style={{
                   color:
                     line.includes("ONLINE") ||
@@ -85,16 +85,16 @@ const BootSequence = ({ onComplete }) => {
 
 const StatCard = ({ value, label, color = "#F59E0B" }) => (
   <div
-    className="text-center p-4"
+    className="text-center p-2 md:p-4"
     style={{
       border: "1px solid #2A2A2A",
       background: "#141414",
     }}
   >
-    <div className="big-number text-3xl font-bold mb-1" style={{ color }}>
+    <div className="big-number text-xl md:text-3xl font-bold mb-1" style={{ color }}>
       {value}
     </div>
-    <div className="mono-xs text-text-muted">{label}</div>
+    <div className="mono-xs" style={{ color: "#6B7280", fontSize: "9px" }}>{label}</div>
   </div>
 );
 
@@ -105,7 +105,6 @@ export default function LoginPage() {
   const [authChecking, setAuthChecking] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
 
-  // Check auth
   useEffect(() => {
     const unsub = onAuthChange((user) => {
       if (user) {
@@ -117,7 +116,6 @@ export default function LoginPage() {
     return () => unsub();
   }, [router]);
 
-  // Live clock
   useEffect(() => {
     const tick = () => {
       setCurrentTime(
@@ -154,68 +152,69 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen grid-bg flex flex-col" style={{ background: "#0D0D0D" }}>
+      {/* TOP STATUS BAR */}
       <div
-        className="flex items-center justify-between px-6 py-2"
+        className="flex items-center justify-between px-3 md:px-6 py-2 gap-2"
         style={{
           background: "#0D0D0D",
           borderBottom: "1px solid #2A2A2A",
         }}
       >
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <span className="status-dot status-dot-green w-2 h-2" />
-            <span className="mono-xs text-text-muted">SYSTEMS ONLINE</span>
+        <div className="flex items-center gap-2 md:gap-4 min-w-0 flex-1">
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="status-dot status-dot-green" style={{ width: 8, height: 8 }} />
+            <span className="mono-xs" style={{ color: "#6B7280" }}>ONLINE</span>
           </div>
           <div className="hidden md:flex items-center gap-2">
-            <span className="status-dot status-dot-amber w-2 h-2" />
-            <span className="mono-xs text-text-muted">GEMINI CORE ACTIVE</span>
+            <span className="status-dot status-dot-amber" style={{ width: 8, height: 8 }} />
+            <span className="mono-xs" style={{ color: "#6B7280" }}>GEMINI CORE ACTIVE</span>
           </div>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
           <span className="mono-xs font-bold" style={{ color: "#F59E0B" }}>
             {currentTime}
           </span>
-          <span className="mono-xs text-text-muted">
+          <span className="mono-xs hidden sm:inline" style={{ color: "#6B7280" }}>
             {new Date()
               .toLocaleDateString("en-US", {
                 weekday: "short",
                 month: "short",
                 day: "numeric",
-                year: "numeric",
               })
               .toUpperCase()}
           </span>
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center p-6">
+      {/* MAIN CONTENT */}
+      <div className="flex-1 flex items-center justify-center p-3 md:p-6">
         <div className="w-full max-w-4xl">
-          <div className="grid md:grid-cols-2 gap-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+            {/* LEFT CARD */}
             <div
-              className="p-8 md:p-12 flex flex-col justify-between"
+              className="p-5 md:p-12 flex flex-col justify-between"
               style={{
                 background: "#141414",
                 border: "1px solid #2A2A2A",
-                borderRight: "none",
               }}
             >
               <div>
-                <div className="flex items-center gap-3 mb-8">
+                <div className="flex items-center gap-3 mb-6 md:mb-8">
                   <div
-                    className="w-12 h-12 flex items-center justify-center"
+                    className="w-10 h-10 md:w-12 md:h-12 flex items-center justify-center flex-shrink-0"
                     style={{
                       border: "1px solid #F59E0B",
                       background: "rgba(245,158,11,0.08)",
                     }}
                   >
-                    <Shield size={24} color="#F59E0B" />
+                    <Shield size={20} color="#F59E0B" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <div
                       className="font-bold tracking-widest"
                       style={{
                         color: "#F59E0B",
-                        fontSize: "14px",
+                        fontSize: "12px",
                         fontFamily: "JetBrains Mono, monospace",
                       }}
                     >
@@ -228,9 +227,9 @@ export default function LoginPage() {
                 </div>
 
                 <h1
-                  className="font-bold mb-4 leading-tight"
+                  className="hero-title font-bold mb-3 md:mb-4 leading-tight"
                   style={{
-                    fontSize: "32px",
+                    fontSize: "clamp(20px, 5vw, 32px)",
                     color: "#E5E5E5",
                     fontFamily: "Inter, sans-serif",
                   }}
@@ -241,19 +240,19 @@ export default function LoginPage() {
                 </h1>
 
                 <p
-                  className="mb-8 leading-relaxed"
+                  className="mb-6 md:mb-8 leading-relaxed"
                   style={{
                     color: "#6B7280",
-                    fontSize: "14px",
+                    fontSize: "13px",
                     fontFamily: "Inter, sans-serif",
                   }}
                 >
                   AI-powered mission control that predicts deadline
-                  failures before they happen. Six intelligent agents
+                  failures before they happen. Nine intelligent agents
                   working 24/7 to protect your commitments.
                 </p>
 
-                <div className="space-y-3">
+                <div className="space-y-2 md:space-y-3">
                   {[
                     { icon: Activity, text: "Real-time deadline radar tracking" },
                     { icon: AlertTriangle, text: "AI risk prediction with probability scores" },
@@ -278,21 +277,23 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-8">
-                <StatCard value="6" label="AI AGENTS" color="#F59E0B" />
+              <div className="grid grid-cols-3 gap-2 mt-6 md:mt-8">
+                <StatCard value="9" label="AI AGENTS" color="#F59E0B" />
                 <StatCard value="24/7" label="MONITORING" color="#10B981" />
                 <StatCard value="0" label="MISSED" color="#EF4444" />
               </div>
             </div>
 
+            {/* RIGHT CARD */}
             <div
-              className="p-8 md:p-12 flex flex-col justify-center"
+              className="p-5 md:p-12 flex flex-col justify-center"
               style={{
                 background: "#1A1A1A",
                 border: "1px solid #2A2A2A",
+                borderTop: "none",
               }}
             >
-              <div className="mb-8">
+              <div className="mb-6 md:mb-8">
                 <div className="flex items-center gap-2 mb-4">
                   <Lock size={12} color="#F59E0B" />
                   <span className="mono-xs font-bold tracking-widest" style={{ color: "#F59E0B" }}>
@@ -315,8 +316,8 @@ export default function LoginPage() {
                   borderLeft: "3px solid #F59E0B",
                 }}
               >
-                <div className="mono-xs text-text-muted mb-1">SECURITY NOTICE</div>
-                <div className="mono-xs" style={{ color: "#A3A3A3" }}>
+                <div className="mono-xs mb-1" style={{ color: "#6B7280" }}>SECURITY NOTICE</div>
+                <div className="mono-xs" style={{ color: "#A3A3A3", lineHeight: 1.5 }}>
                   Access restricted to authorized operators. Authentication via Google Secure OAuth 2.0.
                 </div>
               </div>
@@ -336,16 +337,7 @@ export default function LoginPage() {
                   letterSpacing: "0.1em",
                   cursor: loading ? "not-allowed" : "pointer",
                   borderRadius: "2px",
-                }}
-                onMouseEnter={(e) => {
-                  if (!loading) {
-                    e.currentTarget.style.background = "rgba(245,158,11,0.2)";
-                    e.currentTarget.style.boxShadow = "0 0 20px rgba(245,158,11,0.2)";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = "rgba(245,158,11,0.1)";
-                  e.currentTarget.style.boxShadow = "none";
+                  minHeight: "48px",
                 }}
               >
                 {loading ? (
@@ -380,24 +372,24 @@ export default function LoginPage() {
 
               <div className="flex items-center gap-3 mb-4">
                 <div className="flex-1 h-px" style={{ background: "#2A2A2A" }} />
-                <span className="mono-xs text-text-muted">SYSTEM INFO</span>
+                <span className="mono-xs" style={{ color: "#6B7280" }}>SYSTEM INFO</span>
                 <div className="flex-1 h-px" style={{ background: "#2A2A2A" }} />
               </div>
 
               <div className="space-y-2">
                 {[
-                  { label: "AI ENGINE", value: "GEMINI 2.0 FLASH", color: "#10B981" },
-                  { label: "DATABASE", value: "FIREBASE FIRESTORE", color: "#10B981" },
-                  { label: "AGENTS", value: "8 ACTIVE", color: "#F59E0B" },
+                  { label: "AI ENGINE", value: "GEMINI 2.5 FLASH", color: "#10B981" },
+                  { label: "DATABASE", value: "FIRESTORE", color: "#10B981" },
+                  { label: "AGENTS", value: "9 ACTIVE", color: "#F59E0B" },
                   { label: "STATUS", value: "ALL SYSTEMS GO", color: "#10B981" },
                 ].map((item) => (
                   <div
                     key={item.label}
-                    className="flex items-center justify-between py-1"
+                    className="flex items-center justify-between py-1 gap-2"
                     style={{ borderBottom: "1px solid #1A1A1A" }}
                   >
-                    <span className="mono-xs text-text-muted">{item.label}</span>
-                    <span className="mono-xs font-bold" style={{ color: item.color }}>
+                    <span className="mono-xs flex-shrink-0" style={{ color: "#6B7280" }}>{item.label}</span>
+                    <span className="mono-xs font-bold text-right" style={{ color: item.color }}>
                       {item.value}
                     </span>
                   </div>
@@ -405,7 +397,7 @@ export default function LoginPage() {
               </div>
 
               <div className="mt-6">
-                <p className="mono-xs text-center text-text-muted">
+                <p className="mono-xs text-center" style={{ color: "#6B7280" }}>
                   Powered by Google AI Studio & Gemini API
                 </p>
               </div>
@@ -414,6 +406,7 @@ export default function LoginPage() {
         </div>
       </div>
 
+      {/* TICKER */}
       <div
         className="ticker-wrap py-1.5"
         style={{
@@ -423,7 +416,7 @@ export default function LoginPage() {
       >
         <span className="ticker-content">
           DEADLINE GUARDIAN AI // MISSION CONTROL ACTIVE ◆ GEMINI
-          INTELLIGENCE CORE ONLINE ◆ 8 AI AGENTS DEPLOYED ◆
+          INTELLIGENCE CORE ONLINE ◆ 9 AI AGENTS DEPLOYED ◆
           PROTECTING YOUR DEADLINES 24/7 ◆ NEVER MISS A CRITICAL
           DEADLINE AGAIN ◆ POWERED BY GOOGLE AI STUDIO ◆
         </span>

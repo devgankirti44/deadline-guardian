@@ -172,6 +172,14 @@ Every AI agent operates as an independent intelligence with:
 - Firebase project with Firestore enabled
 - Gemini API key from Google AI Studio
 
+  ## Getting Started
+
+1. Clone the repository.
+2. Install the project dependencies.
+3. Add the required environment variables.
+4. Start the development server.
+5. Open the local URL shown in the terminal.
+
 ### Setup
 
 ```bash

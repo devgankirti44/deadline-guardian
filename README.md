@@ -1,6 +1,11 @@
 # 🛡️ Deadline Guardian
 
 > **AI-powered productivity command center that proactively prevents missed deadlines through 9 autonomous Gemini agents and a revolutionary Mission Intelligence Engine.**
+> ## Project Status
+
+Deadline Guardian is an AI-powered productivity application designed to help
+users manage deadlines, prioritize tasks, and make better decisions about
+their available time.
 
 🏆 **Built for The Last-Minute Life Saver Hackathon by Google**
 
